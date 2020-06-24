@@ -63,8 +63,18 @@ class MyApp(QMainWindow):
     def showName(self):
         name = self.lineEdit.text()
         find = self.table.findItems(name, QtCore.Qt.MatchExactly)
+        res = self.table.currentRow()
         if find:
-            QMessageBox.information(self, "result", f"{name} found")
+            results = '\n'.join(
+                '%d,%d' % (item.row(), item.column())
+                for item in find)
+            rep = results.split(",")
+            row, col = rep
+            data = []
+            for x in range(5):
+                res = self.table.item(int(row),int(x)).text()
+                data.append(res)
+            QMessageBox.information(self, "result", "Name : {}, Username : {}, Email : {}, Address : {}".format(data[1], data[2], data[3], data[4]))
         elif name == "":
             QMessageBox.warning(self, "result", "field don't empty")
         else:
