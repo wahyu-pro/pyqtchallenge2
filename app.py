@@ -3,12 +3,12 @@ from PyQt5.QtWidgets import *
 from PyQt5 import *
 
 fetch = requests.get("https://jsonplaceholder.typicode.com/users")
-
 jsonUser = fetch.json()
 
 class MyApp(QMainWindow):
     def __init__(self):
         super(MyApp, self).__init__()
+        self.head = ["id", "name", "username", "email", "address"]
         self.createTable()
         self.mainUI()
         self.setWidget()
@@ -29,11 +29,10 @@ class MyApp(QMainWindow):
         self.resultInput = QLabel()
 
     def createTable(self):
-        head = ["id", "name", "username", "email", "address"]
         row = len(list(jsonUser))
         self.table = QTableWidget()
         self.table.setRowCount(row)
-        self.table.setColumnCount(len(head))
+        self.table.setColumnCount(len(self.head))
         for row in range(len(jsonUser)):
             for col in range(5):
                 if col == 0:
@@ -47,7 +46,7 @@ class MyApp(QMainWindow):
                 elif col == 4:
                     self.table.setItem(row,col,QTableWidgetItem("{} {}".format(jsonUser[row]["address"]["city"], jsonUser[row]["address"]["street"])))
 
-        self.table.setHorizontalHeaderLabels(head)
+        self.table.setHorizontalHeaderLabels(self.head)
         self.table.verticalHeader().hide()
 
     def setWidget(self):
@@ -71,10 +70,10 @@ class MyApp(QMainWindow):
             rep = results.split(",")
             row, col = rep
             data = []
-            for x in range(5):
+            for x in range(len(self.head)):
                 res = self.table.item(int(row),int(x)).text()
                 data.append(res)
-            QMessageBox.information(self, "result", "Name : {}, Username : {}, Email : {}, Address : {}".format(data[1], data[2], data[3], data[4]))
+            QMessageBox.information(self, "result", "<b>Name</b> : {} <br> <b>Username</b> : {} <br> <b>Email</b> : {} <br> <b>Address</b> : {}".format(data[1], data[2], data[3], data[4]))
         elif name == "":
             QMessageBox.warning(self, "result", "field don't empty")
         else:
